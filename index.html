@@ -19,41 +19,28 @@
 			document.body.appendChild( renderer.domElement );
    
 /*****************/
-			camera.position.z = 5;
+			camera.rotation.x = 5*Math.PI;
+			camera.position.z = 8;
+			
+			var material = new THREE.LineBasicMaterial({
+				color: 0x0000ff
+			});
 
-			
-			var geometry = new THREE.BoxGeometry(1, 5, 3);
-			var material = new THREE.MeshNormalMaterial();
-			
-			var cube = new THREE.Mesh( geometry, material );
-			scene.add( cube );
-			
-			
-			
-			geometry = new THREE.BoxGeometry(3, 2, 3);
-			
-			var cube2 = new THREE.Mesh( geometry, material );
-			scene.add( cube2 );
-			
-			/*var MAX_POINTS = 500;
+			var geometry = new THREE.Geometry();
+			geometry.vertices.push(
+				new THREE.Vector3( -10, 0, 0 ),
+				new THREE.Vector3( 0, 10, 0 ),
+				new THREE.Vector3( 10, 0, 0 )
+			);
 
-			// geometry
-			var geometry = new THREE.BufferGeometry();
-
-			// attributes
-			var positions = new Float32Array( MAX_POINTS * 3 ); // 3 vertices per point
-			geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-
-			// draw range
-			var drawCount = 2; // draw the first 2 points, only
-			geometry.setDrawRange( 0, drawCount );
-
-			// material
-			var material = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 2 } );
-
-			// line
-			var line = new THREE.Line( geometry,  material );
-			scene.add( line );*/
+			var line = new THREE.Line( geometry, material );
+			scene.add( line );
+			
+			geometry.vertices.push(
+				new THREE.Vector3( 10, 0, 0 ),
+				new THREE.Vector3( 0, -10, 0 ),
+				new THREE.Vector3( -10, 0, 0 )
+			);
 
 /******************/
 
@@ -61,17 +48,13 @@
 				requestAnimationFrame( animate );
 				renderer.render( scene, camera );
 				
-				cube.rotation.x += 0.01;
-				cube.rotation.y += 0.001;
-				
-				cube2.rotation.x -= 0.01;
-				cube2.rotation.y -= 0.001;
-				
-				cube2.position.x += 0.01;
-				
-				camera.rotation.z += 0.01;
 			}
 			animate();
+			
+			window.onmousemove = function(){
+				camera.rotation.y = -2*Math.PI * event.clientX / window.window.innerWidth - Math.PI;
+				camera.rotation.x = -2*Math.PI * event.clientY / window.window.innerHeight - Math.PI;
+			}
 		</script>
 	</body>
 </html>
