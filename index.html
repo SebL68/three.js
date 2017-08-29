@@ -19,29 +19,45 @@
 			document.body.appendChild( renderer.domElement );
    
 /*****************/
-			camera.rotation.x = 5*Math.PI;
-			camera.position.z = 8;
-			
-			var material = new THREE.LineBasicMaterial({
-				color: 0x0000ff
-			});
+			var MAX_POINTS = 500;
 
-			var geometry = new THREE.Geometry();
-			geometry.vertices.push(
-				new THREE.Vector3( -10, 0, 0 ),
-				new THREE.Vector3( 0, 10, 0 ),
-				new THREE.Vector3( 10, 0, 0 )
-			);
+			// geometry
+			var geometry = new THREE.BufferGeometry();
 
-			var line = new THREE.Line( geometry, material );
+			// attributes
+			var positions = new Float32Array( MAX_POINTS * 3 ); // 3 vertices per point
+			geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
+
+			// draw range
+			var drawCount = 2; // draw the first 2 points, only
+			geometry.setDrawRange( 0, drawCount );
+
+			// material
+			var material = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 2 } );
+
+			// line
+			var line = new THREE.Line( geometry,  material );
 			scene.add( line );
 			
-			geometry.vertices.push(
-				new THREE.Vector3( 10, 0, 0 ),
-				new THREE.Vector3( 0, -10, 0 ),
-				new THREE.Vector3( -10, 0, 0 )
-			);
+			
+			
+			var positions = line.geometry.attributes.position.array;
 
+			var x, y, z, index;
+			x = y = z = index = 0;
+
+			for ( var i = 0, l = MAX_POINTS; i < l; i ++ ) {
+
+				positions[ index ++ ] = x;
+				positions[ index ++ ] = y;
+				positions[ index ++ ] = z;
+
+				x += ( Math.random() - 0.5 ) * 30;
+				y += ( Math.random() - 0.5 ) * 30;
+				z += ( Math.random() - 0.5 ) * 30;
+
+			}
+			line.geometry.setDrawRange( 0, 500 );
 /******************/
 
 			function animate() {
