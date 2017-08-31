@@ -10,6 +10,7 @@
 	</head>
 	<body>
 		<script src="js/three.js"></script>
+		<script src="js/TDSLoader.js"></script>
 		<script>
 			var scene = new THREE.Scene();
 			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -19,45 +20,18 @@
 			document.body.appendChild( renderer.domElement );
    
 /*****************/
-			var MAX_POINTS = 500;
-
-			// geometry
-			var geometry = new THREE.BufferGeometry();
-
-			// attributes
-			var positions = new Float32Array( MAX_POINTS * 3 ); // 3 vertices per point
-			geometry.addAttribute( 'position', new THREE.BufferAttribute( positions, 3 ) );
-
-			// draw range
-			var drawCount = 2; // draw the first 2 points, only
-			geometry.setDrawRange( 0, drawCount );
-
-			// material
-			var material = new THREE.LineBasicMaterial( { color: 0xff0000, linewidth: 2 } );
-
-			// line
-			var line = new THREE.Line( geometry,  material );
-			scene.add( line );
 			
-			
-			
-			var positions = line.geometry.attributes.position.array;
-
-			var x, y, z, index;
-			x = y = z = index = 0;
-
-			for ( var i = 0, l = MAX_POINTS; i < l; i ++ ) {
-
-				positions[ index ++ ] = x;
-				positions[ index ++ ] = y;
-				positions[ index ++ ] = z;
-
-				x += ( Math.random() - 0.5 ) * 30;
-				y += ( Math.random() - 0.5 ) * 30;
-				z += ( Math.random() - 0.5 ) * 30;
-
-			}
-			line.geometry.setDrawRange( 0, 500 );
+			var loader = new THREE.TDSLoader( );
+			//loader.setPath( 'models/3ds/portalgun/textures/' );
+			loader.load( 'imports/item.3DS', function ( object ) {
+				object.traverse( function ( child ) {
+					if ( child instanceof THREE.Mesh ) {
+						//child.material.normalMap = normal;
+					}
+				} );
+				scene.add( object );
+			});
+				
 /******************/
 
 			function animate() {
